@@ -33,6 +33,9 @@ base_packages:
     - visual-studio-code-bin
 
 post_install_actions:
+  github-cli:
+    - command: >
+        git config --global alias.acp '!f() { git add .; echo "Enter commit message:"; read -r msg; git commit -m "$msg"; echo "Pushing changes..."; git push origin "$(git symbolic-ref --short HEAD)"; }; f'
   zsh:
     - command: >
         git clone https://github.com/zsh-users/zsh-autosuggestions.git 
