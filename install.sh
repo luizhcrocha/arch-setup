@@ -36,37 +36,37 @@ init_logging
 
 main() {
     log_info "Starting Arch Linux setup..."
-    
+
     # Check if running as root
     if [[ $EUID -eq 0 ]]; then
         log_error "This script should not be run as root"
         exit 1
     fi
-    
+
     # Install AUR helper
     install_aur_helper
-    
+
     # Install pacman packages
     log_info "Installing pacman packages..."
     install_packages "pacman"
-    
+
     # Install AUR packages
     log_info "Installing AUR packages..."
     install_packages "aur"
-    
+
     # Run post-installation actions
     log_info "Running post-installation actions..."
-    
+
     # Get all packages with post-install actions
     packages=$(yq '.post_install_actions | keys | .[]' config/packages.yaml)
-    
+
     while IFS= read -r package; do
         if [[ -n $package ]]; then
             log_info "Processing post-install actions for $package"
             run_post_install_actions "$package"
         fi
-    done <<< "$packages"
-    
+    done <<<"$packages"
+
     log_info "Installation completed successfully!"
 }
 

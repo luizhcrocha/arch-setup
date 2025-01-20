@@ -3,19 +3,19 @@
 source scripts/utils/logging.sh
 
 install_aur_helper() {
-    if ! command -v paru &> /dev/null; then
+    if ! command -v paru &>/dev/null; then
         log_info "Installing paru AUR helper..."
-        
+
         local temp_dir
         temp_dir=$(yq '.system.temp_dir' config/settings.yaml)
         mkdir -p "$temp_dir"
         cd "$temp_dir" || exit 1
-        
+
         git clone https://aur.archlinux.org/paru-bin.git
         cd paru-bin || exit 1
         makepkg -si --noconfirm
-        
-        if command -v paru &> /dev/null; then
+
+        if command -v paru &>/dev/null; then
             log_info "paru installed successfully"
         else
             log_error "Failed to install paru"
@@ -29,7 +29,7 @@ install_aur_helper() {
 install_packages() {
     local package_type=$1
     local packages
-    
+
     # Read packages from YAML
     if [[ $package_type == "pacman" ]]; then
         packages=$(yq '.base_packages.pacman[]' config/packages.yaml)
@@ -45,16 +45,16 @@ install_packages() {
 run_post_install_actions() {
     local package=$1
     local actions
-    
+
     log_info "Running post-install actions for $package..."
-    
+
     # Get all commands for the package
     actions=$(yq ".post_install_actions.$package[].command" config/packages.yaml)
-    
+
     while IFS= read -r command; do
         if [[ -n $command ]]; then
             log_debug "Executing: $command"
-            
+
             # Check if command is interactive
             if yq ".post_install_actions.$package[].interactive" config/packages.yaml | grep -q "true"; then
                 log_info "This command requires user interaction:"
@@ -71,5 +71,5 @@ run_post_install_actions() {
                 fi
             fi
         fi
-    done <<< "$actions"
+    done <<<"$actions"
 }

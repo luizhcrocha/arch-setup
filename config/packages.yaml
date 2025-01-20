@@ -5,6 +5,7 @@ base_packages:
     - ttf-jetbrains-mono-nerd
     - zellij
     - yazi
+    - wl-clipboard
     - zoxide
     - swww
     - libnotify
@@ -23,6 +24,7 @@ base_packages:
     - github-cli
     - docker
     - docker-compose
+    - dotnet-sdk
 
   aur:
     - paru-bin
@@ -32,6 +34,8 @@ base_packages:
     - atuin
     - 1password
     - visual-studio-code-bin
+    - pulumi
+    - asdf-vm
 
 post_install_actions:
   github-cli:
@@ -59,6 +63,9 @@ post_install_actions:
     - command: sudo chown -R $USER:$USER /usr/local/bin
     - command: curl -fsSL https://downloads.slack-edge.com/slack-cli/install.sh | bash -s slack-cli
 
+  dagger:
+    - command: curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
+
   chezmoi:
     - command: chezmoi init --apply https://github.com/luizhcrocha/dotfiles.git
 
@@ -78,3 +85,6 @@ post_install_actions:
   NetworkManager:
     - command: systemctl enable NetworkManager.service
     - command: systemctl start NetworkManager.service
+  asdf-vm:
+    - command: asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+    - command: asdf install nodejs latest
