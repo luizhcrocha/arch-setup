@@ -2,7 +2,6 @@
 
 set -e
 
-
 # Color output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -11,7 +10,10 @@ NC='\033[0m'
 # Detect if script is being run via curl
 if [[ ! -f "scripts/utils/logging.sh" ]]; then
     echo -e "${GREEN}Installing dependencies...${NC}"
-    sudo pacman -Sy --needed --noconfirm git base-devel yq
+    sudo pacman -Sy --needed --noconfirm git base-devel yq github-cli
+
+    echo -e "${GREEN}Authenticating with GitHub...${NC}"
+    gh auth login
 
     echo -e "${GREEN}Cloning setup repository...${NC}"
     git clone https://github.com/luizhcrocha/arch-setup.git
