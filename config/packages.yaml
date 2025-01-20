@@ -1,0 +1,76 @@
+# Package definitions and post-installation actions
+base_packages:
+  pacman:
+    - fzf
+    - ttf-jetbrains-mono-nerd
+    - yazi
+    - zoxide
+    - swww
+    - libnotify
+    - notification-daemon
+    - swaync
+    - NetworkManager
+    - network-manager-applet
+    - pavucontrol
+    - bluez
+    - bluez-utils
+    - blueman
+    - zsh
+    - zsh-autosuggestions
+    - zsh-syntax-highlighting
+    - chezmoi
+    - github-cli
+    - docker
+    - docker-compose
+
+  aur:
+    - paru-bin
+    - slack-desktop
+    - jetbrains-toolbox
+    - ghostty
+    - atuin
+    - 1password
+    - visual-studio-code-bin
+
+post_install_actions:
+  zsh:
+    - command: >
+        git clone https://github.com/zsh-users/zsh-autosuggestions.git 
+        ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    - command: >
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git 
+        ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    - command: >
+        git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git 
+        ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
+    - command: >
+        git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git 
+        ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autocomplete
+
+  git:
+    - command: git config --global user.email "luizhrocha@gmail.com"
+    - command: git config --global user.name "Luiz Rocha"
+
+  slack-cli:
+    - command: sudo chown -R $USER:$USER /usr/local/bin
+    - command: curl -fsSL https://downloads.slack-edge.com/slack-cli/install.sh | bash -s slack-cli
+
+  chezmoi:
+    - command: chezmoi init --apply https://github.com/luizhcrocha/dotfiles.git
+
+  atuin:
+    - description: "Atuin installed - login can be done later"
+
+  docker:
+    - command: sudo systemctl enable docker.service
+    - command: sudo systemctl start docker.service
+    - command: sudo usermod -aG docker $USER
+    - description: "Docker installed - you may need to log out and back in for group changes to take effect"
+
+  bluetooth:
+    - command: systemctl enable bluetooth.service
+    - command: systemctl start bluetooth.service
+
+  NetworkManager:
+    - command: systemctl enable NetworkManager.service
+    - command: systemctl start NetworkManager.service
