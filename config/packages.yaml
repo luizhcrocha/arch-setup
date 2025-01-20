@@ -3,6 +3,7 @@ base_packages:
   pacman:
     - fzf
     - ttf-jetbrains-mono-nerd
+    - zellij
     - yazi
     - zoxide
     - swww
