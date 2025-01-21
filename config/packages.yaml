@@ -25,6 +25,7 @@ base_packages:
     - docker
     - docker-compose
     - dotnet-sdk
+    - anydesk-bin
 
   aur:
     - paru-bin
