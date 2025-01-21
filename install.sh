@@ -53,11 +53,9 @@ main() {
     install_aur_helper
 
     # Install pacman packages
-    log_info "Installing pacman packages..."
     install_packages "pacman"
 
     # Install AUR packages
-    log_info "Installing AUR packages..."
     install_packages "aur"
 
     # Run post-installation actions

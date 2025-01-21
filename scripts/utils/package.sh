@@ -32,15 +32,15 @@ install_packages() {
 
     # Read packages from YAML
     if [[ $package_type == "pacman" ]]; then
-        packages=$(yq '.base_packages.pacman[]' config/packages.yaml)
+        packages=$(yq '.base_packages.pacman[]' config/packages.yaml | tr -d '"')
+        echo $packages
         log_info "Installing pacman packages..."
         sudo pacman -Sy --needed --noconfirm $packages
     elif [[ $package_type == "aur" ]]; then
-        packages=$(yq '.base_packages.aur[]' config/packages.yaml)
+        packages=$(yq '.base_packages.aur[]' config/packages.yaml | tr -d '"')
         log_info "Installing AUR packages..."
-        paru -Sy --needed --noconfirm
-        bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/setup-arch.sh)
         paru -Sy --needed --noconfirm $packages
+        bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/setup-arch.sh)
     fi
 }
 

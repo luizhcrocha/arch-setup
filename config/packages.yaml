@@ -11,7 +11,7 @@ base_packages:
     - libnotify
     - notification-daemon
     - swaync
-    - NetworkManager
+    - networkmanager
     - network-manager-applet
     - pavucontrol
     - bluez

@@ -8,8 +8,8 @@ user:
   # These will be replaced by actual values during installation
   name: ${USER}
   home: ${HOME}
-  
+
 install:
-  parallel: true  # Install packages in parallel when possible
-  confirm_each: false  # Don't ask for confirmation for each package
-  ignore_errors: false  # Stop on errors by default
+  parallel: true # Install packages in parallel when possible
+  confirm_each: false # Don't ask for confirmation for each package
+  ignore_errors: false # Stop on errors by default
