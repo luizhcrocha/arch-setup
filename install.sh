@@ -6,14 +6,20 @@ set -e
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Detect if script is being run via curl
-if [[ ! -f "scripts/utils/logging.sh" ]]; then
+if [[ ! -f "${SCRIPT_DIR}/scripts/utils/logging.sh" ]]; then
     echo -e "${GREEN}Installing dependencies...${NC}"
     sudo pacman -Sy --needed --noconfirm git base-devel yq github-cli
 
-    echo -e "${GREEN}Authenticating with GitHub...${NC}"
-    gh auth login
+    echo -e "${GREEN}Checking GitHub authentication status...${NC}"
+    if ! gh auth status &>/dev/null; then
+        echo -e "${GREEN}Authenticating with GitHub...${NC}"
+        gh auth login
+    else
+        echo -e "${GREEN}Already authenticated with GitHub${NC}"
+    fi
 
     echo -e "${GREEN}Cloning setup repository...${NC}"
     git clone https://github.com/luizhcrocha/arch-setup.git
