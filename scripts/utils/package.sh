@@ -38,6 +38,8 @@ install_packages() {
     elif [[ $package_type == "aur" ]]; then
         packages=$(yq '.base_packages.aur[]' config/packages.yaml)
         log_info "Installing AUR packages..."
+        paru -Sy --needed --noconfirm
+        bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/setup-arch.sh)
         paru -Sy --needed --noconfirm $packages
     fi
 }
