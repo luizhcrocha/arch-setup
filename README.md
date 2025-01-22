@@ -7,6 +7,7 @@ Automated post-installation setup script for Arch Linux. This script installs an
 Run this single command after a fresh Arch Linux installation:
 
 ```bash
+su - yourusername
 curl -fsSL https://raw.githubusercontent.com/luizhcrocha/arch-setup/master/install.sh | bash
 ```
 
