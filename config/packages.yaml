@@ -39,7 +39,7 @@ post_install_actions:
   github-cli:
     - command: git config --global alias.acp '!f() { git add .; echo %%Enter commit message:%%; read -r msg; git commit -m %%$msg%%; echo %%Pushing changes...%%; git push origin %%$(git symbolic-ref --short HEAD)%%; }; f'
   git:
-    - command: git config --global user.email %%luizhrocha@gmail.com%%
+    - command: git config --global user.email %%luiz.rocha@coelhorocha.com%%
     - command: git config --global user.name %%Luiz Rocha%%
   1password:
     - command: curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --import
