@@ -42,6 +42,7 @@ init_logging
 
 main() {
     log_info "Starting Arch Linux setup..."
+    sudo mkdir -p /usr/share/keyrings
     bash <(curl -sS https://keys.openpgp.org/vks/v1/by-fingerprint/F4FDB18A9937358364B276E9E25D679AF73C6D2F | gpg --import -)
 
     # Check if running as root

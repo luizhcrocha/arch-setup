@@ -19,13 +19,14 @@ base_packages:
     - github-cli
     - docker
     - docker-compose
+    - starship
     - dotnet-sdk
 
   aur:
+    - oh-my-posh-bin
     - slack-desktop
     - jetbrains-toolbox
     - ghostty
-    - atuin
     - visual-studio-code-bin
     - microsoft-edge-stable
     - pulumi
@@ -36,17 +37,17 @@ base_packages:
     - zsh-fast-syntax-highlighting
 
 post_install_actions:
-  github-cli:
-    - command: git config --global alias.acp '!f() { git add .; echo %%Enter commit message:%%; read -r msg; git commit -m %%$msg%%; echo %%Pushing changes...%%; git push origin %%$(git symbolic-ref --short HEAD)%%; }; f'
+  atuin:
+    - command: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+  browser:
+    - command: xdg-settings set default-web-browser microsoft-edge.desktop
   git:
+    - command: git config --global alias.acp '!f() { git add .; echo %%Enter commit message:%%; read -r msg; git commit -m %%$msg%%; echo %%Pushing changes...%%; git push origin %%$(git symbolic-ref --short HEAD)%%; }; f'
     - command: git config --global user.email %%luiz.rocha@coelhorocha.com%%
     - command: git config --global user.name %%Luiz Rocha%%
   1password:
     - command: curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --import
-    - command: paru -Sy --needed --noconfirm 1password
-    - command: sleep 5 && mkdir -p ~/.local/share/applications/
-    - command: cp /usr/share/applications/1password.desktop ~/.local/share/applications/
-    - command: sed -i.bak %%s/^Exec=.*$/Exec=\/usr\/bin\/1password --enable-features=UseOzonePlatform --ozone-platform=x11 %U/%% ~/.local/share/applications/1password.desktop
+    - command: paru -Sy --needed 1password
   slack-cli:
     - command: sudo chown -R $USER:$USER /usr/local/bin
     - command: curl -fsSL https://downloads.slack-edge.com/slack-cli/install.sh | bash -s slack-cli
