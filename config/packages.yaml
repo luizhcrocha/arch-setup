@@ -24,6 +24,7 @@ base_packages:
 
   aur:
     - oh-my-posh-bin
+    - xclip-git
     - slack-desktop
     - jetbrains-toolbox
     - ghostty
