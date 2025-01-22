@@ -25,7 +25,6 @@ base_packages:
     - docker
     - docker-compose
     - dotnet-sdk
-    - anydesk-bin
 
   aur:
     - paru-bin
@@ -37,6 +36,7 @@ base_packages:
     - visual-studio-code-bin
     - pulumi
     - asdf-vm
+    - anydesk-bin
 
 post_install_actions:
   github-cli:
