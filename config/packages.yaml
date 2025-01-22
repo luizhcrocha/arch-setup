@@ -32,7 +32,6 @@ base_packages:
     - jetbrains-toolbox
     - ghostty
     - atuin
-    - 1password
     - visual-studio-code-bin
     - pulumi
     - asdf-vm
@@ -59,7 +58,9 @@ post_install_actions:
   git:
     - command: git config --global user.email "luizhrocha@gmail.com"
     - command: git config --global user.name "Luiz Rocha"
-
+  1password:
+    - command: curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --import 
+    - command: paru -S 1password
   slack-cli:
     - command: sudo chown -R $USER:$USER /usr/local/bin
     - command: curl -fsSL https://downloads.slack-edge.com/slack-cli/install.sh | bash -s slack-cli
