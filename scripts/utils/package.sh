@@ -40,30 +40,31 @@ install_packages() {
         packages=$(yq '.base_packages.aur[]' config/packages.yaml | tr -d '"')
         log_info "Installing AUR packages..."
         paru -Sy --needed --noconfirm $packages
-        bash <(curl -s https://raw.githubusercontent.com/mylinuxforwork/dotfiles/main/setup-arch.sh)
     fi
 }
 
 run_post_install_actions() {
     local package=$1
     local actions
-
+    
     log_info "Running post-install actions for $package..."
-
+    
     # Get all commands for the package
     actions=$(yq ".post_install_actions.$package[].command" config/packages.yaml)
-
+    
     while IFS= read -r command; do
         if [[ -n $command ]]; then
             log_debug "Executing: $command"
-
+            
             # Check if command is interactive
             if yq ".post_install_actions.$package[].interactive" config/packages.yaml | grep -q "true"; then
                 log_info "This command requires user interaction:"
                 echo "$command"
             else
-                eval "$command"
-                if [[ $? -eq 0 ]]; then
+                # Execute command in a proper shell environment
+                # Remove extra quotes that might interfere with pipes
+                command="${command//\"/}"
+                if bash -c "$command"; then
                     log_info "Command executed successfully"
                 else
                     log_error "Command failed: $command"
@@ -73,5 +74,12 @@ run_post_install_actions() {
                 fi
             fi
         fi
-    done <<<"$actions"
+    done <<< "$actions"
+    
+    # Check for description
+    local description
+    description=$(yq ".post_install_actions.$package[].description" config/packages.yaml)
+    if [[ -n $description && $description != "null" ]]; then
+        log_info "$description"
+    fi
 }
