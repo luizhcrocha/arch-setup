@@ -1,4 +1,3 @@
-# Package definitions and post-installation actions
 base_packages:
   pacman:
     - fzf
@@ -17,52 +16,172 @@ base_packages:
     - blueman
     - chezmoi
     - github-cli
+    - wl-clipboard
     - docker
     - docker-compose
     - starship
     - dotnet-sdk
+    - polkit-gnome
+    - gnome-keyring
+    - seahorse
+    - gtk3
+    - libappindicator-gtk3
+    - xdg-desktop-portal
+    - xdg-desktop-portal-hyprland
+    - ffmpeg
+    - p7zip
+    - jq
+    - poppler
+    - fd
+    - ripgrep
+    - imagemagick
+    - zip
+    - unzip
+    - unixodbc
 
   aur:
-    - oh-my-posh-bin
-    - xclip-git
-    - slack-desktop
-    - jetbrains-toolbox
-    - ghostty
-    - visual-studio-code-bin
-    - microsoft-edge-stable
-    - pulumi
-    - asdf-vm
-    - anydesk-bin
-    - zsh-autosuggestions
-    - zsh-syntax-highlighting
-    - zsh-fast-syntax-highlighting
+    simple:
+      - oh-my-posh-bin
+      - xclip-git
+      - jetbrains-toolbox
+      - ghostty
+      - visual-studio-code-bin
+      - microsoft-edge-stable
+      - pulumi
+      - anydesk-bin
+      - zsh-autosuggestions
+      - zsh-syntax-highlighting
+      - zsh-fast-syntax-highlighting
+
+    interactive:
+      - name: slack-desktop
+        description: "Slack Desktop (multiple versions available)"
+      - name: asdf-vm
+        description: "ASDF Version Manager (multiple versions available)"
 
 post_install_actions:
-  atuin:
-    - command: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
-  browser:
-    - command: xdg-settings set default-web-browser microsoft-edge.desktop
-  git:
-    - command: git config --global alias.acp '!f() { git add .; echo %%Enter commit message:%%; read -r msg; git commit -m %%$msg%%; echo %%Pushing changes...%%; git push origin %%$(git symbolic-ref --short HEAD)%%; }; f'
-    - command: git config --global user.email %%luiz.rocha@coelhorocha.com%%
-    - command: git config --global user.name %%Luiz Rocha%%
+  directories:
+    - type: directories
+      paths:
+        - path: ~/.1password/ssh
+          mode: "700"
+        - path: ~/.ssh
+          mode: "700"
+        - path: ~/.config/1Password
+        - path: ~/.local/share/1Password
+      description: Create required directories with proper permissions
+
   1password:
-    - command: curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --import
-    - command: paru -Sy --needed 1password
-  slack-cli:
-    - command: sudo chown -R $USER:$USER /usr/local/bin
-    - command: curl -fsSL https://downloads.slack-edge.com/slack-cli/install.sh | bash -s slack-cli
-  dagger:
-    - command: curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
+    - type: gpg_import
+      url: https://downloads.1password.com/linux/keys/1password.asc
+      description: Import 1Password GPG key
+    - type: package
+      name: 1password
+      method: paru
+      description: Install 1Password
+    - type: symlinks
+      links:
+        - source: /opt/1Password/com.1password.1password.json
+          target: /etc/opt/chrome/native-messaging-hosts/com.1password.1password.json
+          sudo: true
+        - source: /opt/1Password/com.1password.1password.json
+          target: /etc/chromium/native-messaging-hosts/com.1password.1password.json
+          sudo: true
+      description: Setup browser integration for 1Password
+
+  atuin:
+    - type: curl
+      url: https://setup.atuin.sh
+      pipe_to: sh
+      description: Install Atuin shell history sync
+
+  browser:
+    - type: command
+      cmd: xdg-settings
+      args: 
+       - set
+       - default-web-browser
+       - microsoft-edge.desktop
+      description: Set default browser
+
+  git:
+    - type: git_config
+      settings:
+        - key: alias.acp
+          value: |
+            !f() {
+              git add .;
+              echo "Enter commit message:";
+              read -r msg;
+              git commit -m "$msg";
+              echo "Pushing changes...";
+              git push origin "$(git symbolic-ref --short HEAD)";
+              }; f
+        - key: user.email
+          value: luiz.rocha@coelhorocha.com
+        - key: user.name
+          value: Luiz Rocha
+      description: Configure git settings
+
+  zsh: 
+    - type: command
+      cmd: chsh
+      args:
+        - -s
+        - /usr/bin/zsh
+      description: Changes shell to zsh
+
+  slack-cli: chsh -s /usr/bin/zs
+    - type: command
+      cmd: sudo
+      args:
+        - chown
+        - -R
+        - $USER:$USER
+        - /usr/local/bin
+      description: Fix permissions for local bin
+    - type: curl
+      url: https://downloads.slack-edge.com/slack-cli/install.sh
+      pipe_to: bash -s slack-cli
+      description: Install Slack CLI
+
   docker:
-    - command: sudo systemctl enable docker.service
-    - command: sudo systemctl start docker.service
-    - command: sudo usermod -aG docker $USER
+    - type: systemd
+      actions:
+        - service: docker.service
+          operations: 
+        - enable
+        - start
+    - type: command
+      cmd: sudo
+      args:
+        - usermod
+        - -aG
+        - docker
+        - $USER
+      description: Add user to docker group
+
   bluetooth:
-    - command: systemctl enable bluetooth.service
-    - command: systemctl start bluetooth.service
+    - type: systemd
+      actions:
+        - service: bluetooth.service
+          operations:
+            - enable
+            - start
+
   NetworkManager:
-    - command: systemctl enable NetworkManager.service
-    - command: systemctl start NetworkManager.service
+    - type: systemd
+      actions:
+        - service: NetworkManager.service
+          operations:
+            - enable
+            - start
+
   asdf-vm:
-    - command: source /opt/asdf-vm/asdf.sh && asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git && asdf install nodejs latest
+    - type: command
+      cmd: bash
+      args:
+        - -c
+        - source /opt/asdf-vm/asdf.sh && asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git && asdf install nodejs latest
+      description: Setup ASDF and install Node.js
+

@@ -2,6 +2,8 @@
 system:
   aur_helper: paru
   log_file: /var/log/arch-setup.log
+  log_level: INFO  # Can be DEBUG, INFO, WARN, ERROR, or FATAL
+  log_format: text # Can be text or json
   temp_dir: /tmp/arch-setup
 
 user:
@@ -10,6 +12,13 @@ user:
   home: ${HOME}
 
 install:
-  parallel: true # Install packages in parallel when possible
+  parallel: true     # Install packages in parallel when possible
   confirm_each: false # Don't ask for confirmation for each package
   ignore_errors: false # Stop on errors by default
+
+# Logging verbosity for different components
+logging:
+  package_install: INFO
+  post_install: DEBUG
+  system_config: INFO
+  directory_setup: INFO
