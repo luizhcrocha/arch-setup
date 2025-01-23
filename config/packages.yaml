@@ -38,6 +38,54 @@ base_packages:
     - zip
     - unzip
     - unixodbc
+    - hyprland
+    - hyprpaper
+    - hyprlock
+    - hypridle
+    - noto-fonts
+    - libnotify
+    - dunst
+    - kitty
+    - qt5-wayland
+    - qt6-wayland
+    - wget
+    - qt5-graphicaleffects
+    - qt5-quickcontrols2
+    - qt5-svg
+    - fastfetch
+    - xdg-desktop-portal-gtk
+    - eza
+    - python-pip
+    - python-gobject
+    - python-screeninfo
+    - tumbler
+    - brightnessctl
+    - nm-connection-editor
+    - gtk4
+    - libadwaita
+    - fuse2
+    - firefox
+    - neovim
+    - htop
+    - nautilus
+    - python-pywal
+    - grim
+    - slurp
+    - cliphist
+    - nwg-look
+    - qt6ct
+    - waybar
+    - rofi-wayland
+    - zsh
+    - pavucontrol
+    - papirus-icon-theme
+    - breeze
+    - gvfs
+    - otf-font-awesome
+    - ttf-fira-sans
+    - ttf-fira-code
+    - ttf-firacode-nerd
+    - nwg-dock-hyprland
 
   aur:
     simple:
@@ -52,6 +100,26 @@ base_packages:
       - zsh-autosuggestions
       - zsh-syntax-highlighting
       - zsh-fast-syntax-highlighting
+      - zsh-completions
+      - hypridle
+      - hyprlock
+      - hyprpaper
+      - nautilus-open-any-termina
+      - aylurs-gtk-shell
+      - bibata-cursor-theme-bin
+      - checkupdates-with-aur
+      - grimblast-git
+      - hyprshade
+      - mission-center
+      - nautilus-open-any-terminal
+      - pacseek
+      - pinta
+      - python-pywalfox
+      - python-screeninfo
+      - smile
+      - waypaper
+      - wlogout
+      - zen-browser-bin
 
     interactive:
       - name: slack-desktop
@@ -98,10 +166,10 @@ post_install_actions:
   browser:
     - type: command
       cmd: xdg-settings
-      args: 
-       - set
-       - default-web-browser
-       - microsoft-edge.desktop
+      args:
+        - set
+        - default-web-browser
+        - microsoft-edge.desktop
       description: Set default browser
 
   git:
@@ -123,7 +191,7 @@ post_install_actions:
           value: Luiz Rocha
       description: Configure git settings
 
-  zsh: 
+  zsh:
     - type: command
       cmd: chsh
       args:
@@ -131,7 +199,7 @@ post_install_actions:
         - /usr/bin/zsh
       description: Changes shell to zsh
 
-  slack-cli: chsh -s /usr/bin/zs
+  slack-cli:
     - type: command
       cmd: sudo
       args:
@@ -149,7 +217,7 @@ post_install_actions:
     - type: systemd
       actions:
         - service: docker.service
-          operations: 
+          operations:
         - enable
         - start
     - type: command
@@ -184,4 +252,3 @@ post_install_actions:
         - -c
         - source /opt/asdf-vm/asdf.sh && asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git && asdf install nodejs latest
       description: Setup ASDF and install Node.js
-
